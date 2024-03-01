@@ -2,6 +2,7 @@
   "expo": {
     "name": "expence-tracker",
     "slug": "expence-tracker",
+        "scheme": "expence-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
