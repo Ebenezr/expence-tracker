@@ -1,52 +1,65 @@
 import 'react-native-gesture-handler';
-import { Tabs } from 'expo-router/tabs';
-
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
 import { Provider } from 'react-redux';
-
+import { useEffect } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
+import { useColorScheme } from '@/components/useColorScheme';
 import { store } from '../store/store';
-import IconButton from '../components/IconButton';
 
-const Layout = () => {
-  return (
-    <Provider store={store}>
-      <Tabs
-        initialRouteName='index'
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
-      >
-        <Tabs.Screen
-          name='index'
-          options={{
-            title: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <IconButton icon='home' size={size} color={color} />
-            ),
-          }}
-        />
-      </Tabs>
-    </Provider>
-  );
+export {
+  // Catch any errors thrown by the Layout component.
+  ErrorBoundary,
+} from 'expo-router';
+
+export const unstable_settings = {
+  // Ensure that reloading on `/modal` keeps a back button present.
+  initialRouteName: '(tabs)',
 };
 
-export default Layout;
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 
-// initialRouteName='index'
-//             screenOptions={{
-//                 headerStyle: {
-//                     backgroundColor: '#f4511e',
-//                 },
-//                 headerTintColor: '#fff',
-//                 headerTitleStyle: {
-//                     fontWeight: 'bold',
-//                 },
-//                 tabBarIcon: ({ color, size }) => ( // Add tabBarIcon prop
-//                     <Ionicons name="home" size={size} color={color} /> // Use Ionicons component with desired icon name
-//                 ),
-//             }}
+export default function RootLayout() {
+  const [loaded, error] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    ...FontAwesome.font,
+  });
+
+  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
+  useEffect(() => {
+    if (error) throw error;
+  }, [error]);
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
+
+  return <RootLayoutNav />;
+}
+
+function RootLayoutNav() {
+  const colorScheme = useColorScheme();
+
+  return (
+    <Provider store={store}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+    </Provider>
+  );
+}
