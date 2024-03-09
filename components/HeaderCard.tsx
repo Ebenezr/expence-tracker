@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 const HeaderCard = ({ expences }: any) => {
-  const sumExpenses = expences.reduce((total: any, expense: any) => {
+  const sumExpenses = expences?.reduce((total: any, expense: any) => {
     const today = new Date();
     const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
     if (expense.date >= sevenDaysAgo && expense.date <= today) {
