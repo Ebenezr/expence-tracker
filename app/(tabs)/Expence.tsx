@@ -1,17 +1,45 @@
+import { FlashList } from '@shopify/flash-list';
 import React from 'react';
-import { View, Text } from 'react-native';
-
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { DUMMY_EXPENSES } from '@/data/data';
+import ExpenseCard from '@/components/ExpenceCard';
 interface RecentExpenseProps {
   expense: string;
 }
 
-const Expense: React.FC<RecentExpenseProps> = ({ expense }) => {
+const Expense: React.FC<RecentExpenseProps> = () => {
+  const renderItem = ({ item }: any) => {
+    return (
+      <ExpenseCard
+        title={item.title}
+        date={item.date.toLocaleDateString()}
+        amount={item.amount}
+      />
+    );
+  };
+
   return (
-    <View>
-      <Text>Recent Expense</Text>
-      <Text>{expense}</Text>
-    </View>
+    <SafeAreaView style={styles.screen}>
+      <FlashList
+        data={DUMMY_EXPENSES}
+        renderItem={renderItem}
+        estimatedItemSize={100}
+      />
+    </SafeAreaView>
   );
 };
 
 export default Expense;
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    paddingVertical: 40,
+    paddingHorizontal: 10,
+  },
+  categotyWrapper: {
+    flex: 1,
+    margin: 15,
+    height: 150,
+  },
+});
