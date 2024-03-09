@@ -6,7 +6,7 @@ describe('HeaderCard', () => {
   it('should render correctly and calculate sum of expenses', () => {
     const expenses = [
       { amount: 100, date: new Date() },
-      { amount: 200, date: new Date(2024, 2, 7) },
+      { amount: 200, date: new Date(2024, 2, 4) },
       {
         amount: 300,
         date: new Date(new Date().getTime() - 8 * 24 * 60 * 60 * 1000),
