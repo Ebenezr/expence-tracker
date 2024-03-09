@@ -1,4 +1,5 @@
 import ExpenseCard from '@/components/ExpenceCard';
+import HeaderCard from '@/components/HeaderCard';
 import { DUMMY_EXPENSES } from '@/data/data';
 import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView, StyleSheet } from 'react-native';
@@ -9,16 +10,24 @@ export default function App() {
     if (year !== 2024) {
       return null;
     }
+
     return (
       <ExpenseCard
         title={item.title}
-        date={item.date.toLocaleDateString()}
+        date={item.date.toLocaleDateString('en-us', {
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })}
         amount={item.amount}
       />
     );
   };
+
   return (
     <SafeAreaView style={styles.screen}>
+      <HeaderCard expences={DUMMY_EXPENSES} />
       <FlashList
         data={DUMMY_EXPENSES}
         renderItem={renderItem}

@@ -74,7 +74,7 @@ const DUMMY_EXPENSES: ExpenseType[] = [
     id: 'e15',
     title: 'Movie Tickets',
     amount: 30.0,
-    date: new Date(2024, 2, 20),
+    date: new Date(2024, 3, 2),
   },
   {
     id: 'e16',
@@ -95,20 +95,20 @@ const DUMMY_EXPENSES: ExpenseType[] = [
     id: 'e21',
     title: 'Home Decor',
     amount: 200.0,
-    date: new Date(2024, 8, 10),
+    date: new Date(2024, 2, 5),
   },
   { id: 'e22', title: 'Gifts', amount: 100.0, date: new Date(2024, 9, 1) },
   {
     id: 'e23',
     title: 'Car Maintenance',
-    amount: 300.0,
-    date: new Date(2024, 10, 15),
+    amount: 700.0,
+    date: new Date(2024, 2, 8),
   },
   {
     id: 'e24',
     title: 'Pet Supplies',
     amount: 50.0,
-    date: new Date(2024, 11, 5),
+    date: new Date(2024, 2, 7),
   },
 ];
 
