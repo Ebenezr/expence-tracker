@@ -4,6 +4,7 @@ import { DUMMY_EXPENSES } from '@/data/data';
 import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
+import { formatDate } from '@/utils/date';
 export default function App() {
   const renderItem = ({ item }: any) => {
     const year = item.date.getFullYear();
@@ -14,12 +15,7 @@ export default function App() {
     return (
       <ExpenseCard
         title={item.title}
-        date={item.date.toLocaleDateString('en-us', {
-          weekday: 'short',
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        })}
+        date={formatDate(item.date)}
         amount={item.amount}
       />
     );

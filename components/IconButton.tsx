@@ -4,7 +4,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 interface IconButtonProps {
   icon: string;
   onPress?: () => void;
-  color: string;
+  color: any;
   size?: number;
 }
 

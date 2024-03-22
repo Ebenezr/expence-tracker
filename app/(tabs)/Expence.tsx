@@ -3,6 +3,8 @@ import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { DUMMY_EXPENSES } from '@/data/data';
 import ExpenseCard from '@/components/ExpenceCard';
+
+import { formatDate } from '@/utils/date';
 interface RecentExpenseProps {
   expense: string;
 }
@@ -12,7 +14,7 @@ const Expense: React.FC<RecentExpenseProps> = () => {
     return (
       <ExpenseCard
         title={item.title}
-        date={item.date.toLocaleDateString()}
+        date={formatDate(item.date)}
         amount={item.amount}
       />
     );

@@ -43,7 +43,7 @@ export default function TabLayout() {
                     <IconButton
                       icon='plus-circle'
                       size={25}
-                      color={Colors[colorScheme ?? 'light'].text}
+                      color={Colors.dark.text}
                     />
                   </View>
                 )}

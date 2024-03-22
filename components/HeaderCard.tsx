@@ -1,6 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
+import Colors from '@/constants/Colors';
+import { useColorScheme } from 'react-native';
 
 const HeaderCard = ({ expences }: any) => {
+  const scheme = useColorScheme();
   const sumExpenses = expences?.reduce((total: any, expense: any) => {
     const today = new Date();
     const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -11,9 +14,22 @@ const HeaderCard = ({ expences }: any) => {
   }, 0);
 
   return (
-    <View style={styles.header}>
-      <Text style={styles.headerText}>Last 7 Days</Text>
-      <Text style={styles.totalText}>KES {sumExpenses}</Text>
+    <View
+      style={{
+        ...styles.header,
+        backgroundColor: Colors[scheme ?? 'dark'].accent,
+      }}
+    >
+      <Text
+        style={{ ...styles.headerText, color: Colors[scheme ?? 'dark'].text }}
+      >
+        Last 7 Days
+      </Text>
+      <Text
+        style={{ ...styles.totalText, color: Colors[scheme ?? 'dark'].text }}
+      >
+        KES {sumExpenses}
+      </Text>
     </View>
   );
 };
