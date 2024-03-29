@@ -1,42 +1,70 @@
 import { ExpenseType } from '@/data/data';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
+import { router } from 'expo-router';
+import { formatDate } from '@/utils/date';
 
-const ExpenseCard = ({ title, date, amount }: ExpenseType) => {
+const ExpenseCard = ({ id, title, date, amount }: ExpenseType) => {
   const scheme = useColorScheme();
+
+  const expencePressHandler = () => {
+    router.push({
+      pathname: 'modal',
+      params: {
+        id,
+        title,
+        date,
+        amount,
+      },
+    });
+  };
+
   return (
-    <View
-      style={{
-        ...styles.card,
-        backgroundColor: Colors[scheme ?? 'dark'].whiteSmoke,
-      }}
+    <Pressable
+      style={({ pressed }) => [
+        {
+          opacity: pressed ? 0.5 : 1,
+        },
+      ]}
+      onPress={expencePressHandler}
     >
-      <View style={styles.leftContainer}>
-        <Text style={{ ...styles.title, color: Colors[scheme ?? 'dark'].text }}>
-          {title}
-        </Text>
-        <Text style={{ ...styles.date, color: Colors[scheme ?? 'dark'].gray }}>
-          {date}
-        </Text>
-      </View>
       <View
         style={{
-          ...styles.rightContainer,
+          ...styles.card,
+          backgroundColor: Colors[scheme ?? 'dark'].whiteSmoke,
         }}
       >
-        <Text
+        <View style={styles.leftContainer}>
+          <Text
+            style={{ ...styles.title, color: Colors[scheme ?? 'dark'].text }}
+          >
+            {title}
+          </Text>
+          <Text
+            style={{ ...styles.date, color: Colors[scheme ?? 'dark'].gray }}
+          >
+            {formatDate(date)}
+          </Text>
+        </View>
+        <View
           style={{
-            ...styles.price,
-            backgroundColor: Colors[scheme ?? 'dark'].background,
-            color: Colors[scheme ?? 'dark'].text,
+            ...styles.rightContainer,
           }}
         >
-          KES. {amount}
-        </Text>
+          <Text
+            style={{
+              ...styles.price,
+              backgroundColor: Colors[scheme ?? 'dark'].background,
+              color: Colors[scheme ?? 'dark'].text,
+            }}
+          >
+            KES. {amount}
+          </Text>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
