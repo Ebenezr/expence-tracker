@@ -2,7 +2,7 @@ import ExpenseCard from '@/components/ExpenceCard';
 import HeaderCard from '@/components/HeaderCard';
 import { DUMMY_EXPENSES } from '@/data/data';
 import { FlashList } from '@shopify/flash-list';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, Text } from 'react-native';
 
 export default function App() {
   const renderItem = ({ item }: any) => {
@@ -16,14 +16,28 @@ export default function App() {
     );
   };
 
-  return (
-    <SafeAreaView style={styles.screen}>
-      <HeaderCard expences={DUMMY_EXPENSES} />
+  let fallBackContent;
+  if (DUMMY_EXPENSES.length > 0) {
+    fallBackContent = (
       <FlashList
         data={DUMMY_EXPENSES}
         renderItem={renderItem}
         estimatedItemSize={100}
       />
+    );
+  } else {
+    fallBackContent = (
+      <Text style={styles.fallBackText}>
+        {' '}
+        No expenses registered for the last 7 days
+      </Text>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.screen}>
+      <HeaderCard expences={DUMMY_EXPENSES} />
+      {fallBackContent}
     </SafeAreaView>
   );
 }
@@ -39,5 +53,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 40,
     paddingHorizontal: 10,
+  },
+  fallBackText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 20,
+    color: 'white',
   },
 });

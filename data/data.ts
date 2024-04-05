@@ -2,7 +2,7 @@ interface ExpenseType {
   id?: string;
   title: string;
   amount: number;
-  date?: Date | any;
+  date: Date | any;
 }
 
 const DUMMY_EXPENSES: ExpenseType[] = [

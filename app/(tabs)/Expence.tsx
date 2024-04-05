@@ -1,6 +1,6 @@
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import { DUMMY_EXPENSES } from '@/data/data';
 import ExpenseCard from '@/components/ExpenceCard';
 
@@ -15,15 +15,21 @@ const Expense: React.FC<RecentExpenseProps> = () => {
     );
   };
 
-  return (
-    <SafeAreaView style={styles.screen}>
+  let fallBackContent;
+  if (DUMMY_EXPENSES.length > 0) {
+    fallBackContent = (
       <FlashList
         data={DUMMY_EXPENSES}
         renderItem={renderItem}
         estimatedItemSize={100}
       />
-    </SafeAreaView>
-  );
+    );
+  } else {
+    fallBackContent = (
+      <Text style={styles.fallBackText}>No expenses found</Text>
+    );
+  }
+  return <SafeAreaView style={styles.screen}>{fallBackContent}</SafeAreaView>;
 };
 
 export default Expense;
@@ -38,5 +44,12 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 15,
     height: 150,
+  },
+  fallBackText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 20,
+    color: 'white',
   },
 });

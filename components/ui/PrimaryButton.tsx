@@ -10,30 +10,55 @@ import {
 interface PrimaryButtonProps {
   children: React.ReactNode;
   onPress: () => void;
+  color:
+    | 'text'
+    | 'background'
+    | 'tint'
+    | 'tabIconDefault'
+    | 'tabIconSelected'
+    | 'accent'
+    | 'error'
+    | 'gray'
+    | 'whiteSmoke';
+  variant: 'contained' | 'outlined';
 }
 
-const PrimaryButton = ({ children, ...props }: PrimaryButtonProps) => {
+const PrimaryButton = ({
+  children,
+  color,
+  variant,
+  ...props
+}: PrimaryButtonProps) => {
   const scheme = useColorScheme();
   const { onPress } = props;
+  const buttonColor = Colors[scheme ?? 'dark'][color];
+  const isOutlined = variant === 'outlined';
+
   return (
     <View style={styles.buttonContainer}>
       <Pressable
-        style={({ pressed }) =>
-          pressed
-            ? [
-                styles.button,
-                styles.pressed,
-                {
-                  ...styles.button,
-                  backgroundColor: Colors[scheme ?? 'dark'].accent,
-                },
-              ]
-            : styles.button
-        }
+        style={({ pressed }) => [
+          styles.button,
+          pressed ? styles.pressed : null,
+          isOutlined
+            ? {
+                borderColor: buttonColor,
+                borderWidth: 1,
+                backgroundColor: 'transparent',
+              }
+            : { backgroundColor: buttonColor },
+        ]}
         onPress={onPress}
         android_ripple={{ color: '#A0567A' }}
       >
-        <Text style={styles.buttonText}>{children}</Text>
+        <Text
+          style={[
+            styles.buttonText,
+            isOutlined ? { color: buttonColor } : { color: 'white' },
+          ]}
+        >
+          {children}
+        </Text>
       </Pressable>
     </View>
   );
