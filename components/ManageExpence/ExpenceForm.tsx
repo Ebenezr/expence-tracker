@@ -60,29 +60,28 @@ const ExpenceForm = ({ id, amount, date, title }: IExpence) => {
 
   const onPressSend = (formData: any) => {
     let input = {
-      id: formData.id,
       title: formData.title,
       amount: Number(formData.amount),
       date: new Date(formData.date).toISOString(),
     };
-    setTimeout(async () => {
-      if (isEditing) {
-        try {
-          dispatch(editExpense(input));
-          Alert.alert('Success', 'Expence updated successfully');
-        } catch (e) {
-          Alert.alert('Error', 'Something went wrong, please try again');
-        }
-      } else {
-        try {
-          dispatch(addExpense({ ...input, id: Math.random().toString() }));
-          Alert.alert('Success', 'Expence added successfully');
-        } catch (e) {
-          Alert.alert('Error', 'Something went wrong, please try again');
-        }
+
+    if (isEditing) {
+      try {
+        dispatch(editExpense(input));
+        Alert.alert('Success', 'Expence updated successfully');
+        navigation.goBack();
+      } catch (e) {
+        Alert.alert('Error', 'Something went wrong, please try again');
       }
-      navigation.goBack();
-    }, 2000);
+    } else {
+      try {
+        dispatch(addExpense({ ...input, id: Math.random().toString() }));
+        Alert.alert('Success', 'Expence added successfully');
+        navigation.goBack();
+      } catch (e) {
+        Alert.alert('Error', 'Something went wrong, please try again');
+      }
+    }
   };
 
   return (

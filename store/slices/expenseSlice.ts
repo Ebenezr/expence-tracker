@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DUMMY_EXPENSES } from '@/data/data';
+import { storeExpense } from '@/utils/http';
 
 interface Expense {
   id?: string;
@@ -24,7 +25,9 @@ export const expensesSlice = createSlice({
   initialState,
   reducers: {
     addExpense: (state, action: PayloadAction<Expense>) => {
-      state.expenses.push({ ...action.payload, date: action.payload.date });
+      console.log('payload', action.payload);
+      storeExpense(action.payload);
+      // state.expenses.push({ ...action.payload, date: action.payload.date });
     },
     removeExpense: (state, action: PayloadAction<string>) => {
       state.expenses = state.expenses.filter(
@@ -32,6 +35,8 @@ export const expensesSlice = createSlice({
       );
     },
     editExpense: (state, action: PayloadAction<Expense>) => {
+      console.log('payload', action.payload);
+
       const { id, title, amount, date } = action.payload;
       const existingExpense = state.expenses.find(
         (expense) => expense.id === id
