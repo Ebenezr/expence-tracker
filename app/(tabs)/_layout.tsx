@@ -36,19 +36,19 @@ export default function TabLayout() {
             <IconButton icon='hours-24' size={size} color={color} />
           ),
           headerRight: () => (
-            <Link href='/modal' asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <View style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}>
+            <Pressable>
+              {({ pressed }) => (
+                <View style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}>
+                  <Link href='/modal' asChild>
                     <IconButton
                       icon='plus-circle'
                       size={25}
                       color={Colors.dark.text}
                     />
-                  </View>
-                )}
-              </Pressable>
-            </Link>
+                  </Link>
+                </View>
+              )}
+            </Pressable>
           ),
         }}
       />
