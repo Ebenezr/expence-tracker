@@ -5,7 +5,7 @@ interface Expense {
   id?: string;
   title: string;
   amount: number;
-  date: Date | any;
+  date: string;
 }
 
 interface ExpensesState {
@@ -13,7 +13,10 @@ interface ExpensesState {
 }
 
 const initialState: ExpensesState = {
-  expenses: DUMMY_EXPENSES,
+  expenses: DUMMY_EXPENSES.map((expense) => ({
+    ...expense,
+    date: new Date(expense.date).toISOString(),
+  })),
 };
 
 export const expensesSlice = createSlice({
@@ -21,7 +24,7 @@ export const expensesSlice = createSlice({
   initialState,
   reducers: {
     addExpense: (state, action: PayloadAction<Expense>) => {
-      state.expenses.push(action.payload);
+      state.expenses.push({ ...action.payload, date: action.payload.date });
     },
     removeExpense: (state, action: PayloadAction<string>) => {
       state.expenses = state.expenses.filter(

@@ -1,12 +1,6 @@
 import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 
 interface IExpence {
-  expense?: {
-    id: string;
-    title: string;
-    date: string;
-    amount: string;
-  };
   label: string;
   textInputConfig?: {
     placeholder: string;
@@ -22,6 +16,8 @@ interface IExpence {
     onChangeText?: (text: string) => void;
     autoCorrect?: boolean;
     multiline?: boolean;
+    helperText?: string;
+    error?: boolean;
   };
 }
 
@@ -30,11 +26,17 @@ const Input = ({ label, textInputConfig }: IExpence) => {
   if (textInputConfig?.multiline) {
     inputStyles.push(styles.inputMultiline);
   }
+  if (textInputConfig?.error) {
+    inputStyles.push(styles.inputError);
+  }
 
   return (
     <View style={styles.inputWrapper}>
       <Text style={styles.title}>{label}</Text>
       <TextInput style={inputStyles} {...textInputConfig} />
+      {textInputConfig?.helperText && (
+        <Text style={styles.helperText}>{textInputConfig.helperText}</Text>
+      )}
     </View>
   );
 };
@@ -64,5 +66,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 8,
     paddingVertical: 10,
+  },
+  inputError: {
+    borderColor: 'red',
+    borderWidth: 0.5,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+  },
+  helperText: {
+    color: 'red',
+    fontSize: 12,
   },
 });

@@ -2,15 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 import { View } from '@/components/Themed';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { useLayoutEffect } from 'react';
-import { DUMMY_EXPENSES } from '@/data/data';
 import { useDispatch } from 'react-redux';
 
-import {
-  addExpense,
-  removeExpense,
-  editExpense,
-} from '../store/slices/expenseSlice';
+import { removeExpense } from '../store/slices/expenseSlice';
 import ExpenceForm from '@/components/ManageExpence/ExpenceForm';
 
 export default function ModalScreen() {

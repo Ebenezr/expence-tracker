@@ -1,43 +1,33 @@
-import {
-  Alert,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import Input from './Input';
 import PrimaryButton from '../ui/PrimaryButton';
-import { useLayoutEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import { formatDate } from '@/utils/date';
-import {
-  addExpense,
-  removeExpense,
-  editExpense,
-} from '../../store/slices/expenseSlice';
+import { useLayoutEffect } from 'react';
+import { addExpense, editExpense } from '../../store/slices/expenseSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from 'expo-router';
+import * as yup from 'yup';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 interface IExpence {
-  id: string;
-  title: string;
-  date: string;
-  amount: string;
+  id?: string;
+  title?: string;
+  date?: string;
+  amount?: number;
 }
+
+const expenseSchema = yup.object().shape({
+  title: yup.string().required('Title is required'),
+  date: yup.string().required('Date is required'),
+  amount: yup
+    .number()
+    .required('Amount is required')
+    .typeError('Amount must be a number'),
+});
 
 const ExpenceForm = ({ id, amount, date, title }: IExpence) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  //   const { id, title, date, amount } = params;
-  const [expense, setExpence] = useState({
-    id: id ?? '',
-    title: title ?? '',
-    date: date ?? '',
-    amount: amount ?? '',
-  });
-  const [dateInput, setDateInput] = useState(dayjs());
-
   const isEditing = !!title;
 
   useLayoutEffect(() => {
@@ -55,59 +45,111 @@ const ExpenceForm = ({ id, amount, date, title }: IExpence) => {
     navigation.goBack();
   };
 
-  const confirmHandler = (expense: {
-    id: string;
-    title: string;
-    amount: number;
-    date: Date;
-  }) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(expenseSchema),
+    defaultValues: {
+      title: title ?? '',
+      date: date ?? '',
+      amount: amount ?? 0,
+    },
+  });
+
+  const onPressSend = (formData: any) => {
+    let input = {
+      id: formData.id,
+      title: formData.title,
+      amount: Number(formData.amount),
+      date: new Date(formData.date).toISOString(),
+    };
     setTimeout(async () => {
       if (isEditing) {
-        dispatch(editExpense(expense));
+        try {
+          dispatch(editExpense(input));
+          Alert.alert('Success', 'Expence updated successfully');
+        } catch (e) {
+          Alert.alert('Error', 'Something went wrong, please try again');
+        }
       } else {
-        dispatch(addExpense({ ...expense, id: Math.random().toString() }));
+        try {
+          dispatch(addExpense({ ...input, id: Math.random().toString() }));
+          Alert.alert('Success', 'Expence added successfully');
+        } catch (e) {
+          Alert.alert('Error', 'Something went wrong, please try again');
+        }
       }
       navigation.goBack();
     }, 2000);
   };
 
-  const inputChangeHndler = (text: string, key: string) => {
-    setExpence({ ...expense, [key]: text });
-  };
-
   return (
     <View>
-      <Input
-        expense={expense}
-        label='Title'
-        textInputConfig={{
-          placeholder: 'Enter Title',
-          onChangeText: (text) => inputChangeHndler(text, 'title'),
-          autoCorrect: true,
-          multiline: true,
-          value: expense.title,
+      <Controller
+        control={control}
+        rules={{
+          required: true,
         }}
+        render={({ field: { onChange, value } }) => (
+          <Input
+            label='Title'
+            textInputConfig={{
+              placeholder: 'Enter Title',
+              autoCorrect: true,
+              multiline: true,
+              value: value.toString(),
+              onChangeText: onChange,
+              helperText: errors.title?.message,
+              error: !!errors.title,
+            }}
+          />
+        )}
+        name='title'
       />
-      <Input
-        expense={expense}
-        label='Date'
-        textInputConfig={{
-          placeholder: 'YYYY-MM-DD',
-          maxLength: 10,
-          onChangeText: (text) => inputChangeHndler(text, 'date'),
-          value: expense.date,
+
+      <Controller
+        control={control}
+        rules={{
+          required: true,
         }}
+        render={({ field: { onChange, value } }) => (
+          <Input
+            label='Date'
+            textInputConfig={{
+              placeholder: 'YYYY-MM-DD',
+              value: value.toString(),
+              onChangeText: onChange,
+              helperText: errors.date?.message,
+              error: !!errors.date,
+            }}
+          />
+        )}
+        name='date'
       />
-      <Input
-        expense={expense}
-        label='Amount'
-        textInputConfig={{
-          placeholder: 'Enter Amount',
-          keyboardType: 'numeric',
-          onChangeText: (text) => inputChangeHndler(text, 'amount'),
-          value: expense.amount,
+
+      <Controller
+        control={control}
+        rules={{
+          required: true,
         }}
+        render={({ field: { onChange, value } }) => (
+          <Input
+            label='Amount'
+            textInputConfig={{
+              placeholder: 'Enter Amount',
+              keyboardType: 'numeric',
+              value: value.toString(),
+              onChangeText: onChange,
+              helperText: errors.amount?.message,
+              error: !!errors.amount,
+            }}
+          />
+        )}
+        name='amount'
       />
+
       <View
         style={styles.separator}
         // lightColor='#eee'
@@ -125,30 +167,7 @@ const ExpenceForm = ({ id, amount, date, title }: IExpence) => {
         </View>
         <View style={styles.buttonContainer}>
           <PrimaryButton
-            onPress={() => {
-              //   confirmHandler(expense);
-              console.log(expense);
-              Alert.alert(
-                'Confirm',
-                'Are you sure you want to add this expence?',
-                [
-                  {
-                    text: 'Yes',
-                    onPress: () => {
-                      confirmHandler({
-                        ...expense,
-                        date: dateInput.toDate(),
-                        amount: +expense.amount,
-                      });
-                    },
-                  },
-                  {
-                    text: 'No',
-                    style: 'destructive',
-                  },
-                ]
-              );
-            }}
+            onPress={handleSubmit(onPressSend)}
             color='text'
             variant='contained'
           >
@@ -178,34 +197,3 @@ const styles = StyleSheet.create({
     width: '50%',
   },
 });
-
-{
-  /* <View style={styles.inputWrapper}>
-      <Text style={styles.title}>Title:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder='Enter Title'
-        value={expense?.title ? expense.title : ''}
-        onChangeText={(text) => setExpence({ ...expense, title: text })}
-      />
-    </View>
-    <View style={styles.inputWrapper}>
-      <Text style={styles.title}>Date:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder='Enter Date'
-        value={expense?.date}
-        onChangeText={(text) => setExpence({ ...expense, date: text })}
-      />
-    </View>
-    <View style={styles.inputWrapper}>
-      <Text style={styles.title}>Amount:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder='Enter Amount'
-        value={expense?.amount}
-        onChangeText={(text) => setExpence({ ...expense, amount: text })}
-        keyboardType='numeric'
-      />
-    </View> */
-}
