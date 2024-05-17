@@ -27,7 +27,18 @@ export const fetchExpenses = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_FIREBASE_URI}/expense.json`
     );
-    console.log(response.data);
+
+    const expenses: Expense[] = [];
+
+    for (const key in response.data) {
+      expenses.push({
+        id: key,
+        title: response.data[key].title,
+        amount: response.data[key].amount,
+        date: response.data[key].date,
+      });
+    }
+    return expenses;
   } catch (error) {
     console.log(error);
   }
