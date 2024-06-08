@@ -1,7 +1,5 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import axios from 'axios';
-
+import { REACT_APP_FIREBASE_URI } from '@env';
 interface Expense {
   id?: string;
   title: string;
@@ -10,10 +8,9 @@ interface Expense {
 }
 
 export const storeExpense = async (expense: Expense) => {
-  console.log('url', process.env.REACT_APP_FIREBASE_URI);
   try {
     const response = await axios.post(
-      `${process.env.REACT_APP_FIREBASE_URI}/expense.json`,
+      `${REACT_APP_FIREBASE_URI}/expense.json`,
       expense
     );
     console.log(response.data);
@@ -24,9 +21,7 @@ export const storeExpense = async (expense: Expense) => {
 
 export const fetchExpenses = async () => {
   try {
-    const response = await axios.get(
-      `${process.env.REACT_APP_FIREBASE_URI}/expense.json`
-    );
+    const response = await axios.get(`${REACT_APP_FIREBASE_URI}/expense.json`);
 
     const expenses: Expense[] = [];
 
@@ -47,7 +42,7 @@ export const fetchExpenses = async () => {
 export const removeExpense = async (id: string) => {
   try {
     const response = await axios.delete(
-      `${process.env.REACT_APP_FIREBASE_URI}/expense/${id}.json`
+      `${REACT_APP_FIREBASE_URI}/expense/${id}.json`
     );
     console.log(response.data);
   } catch (error) {
@@ -58,7 +53,7 @@ export const removeExpense = async (id: string) => {
 export const editExpense = async (expense: Expense) => {
   try {
     const response = await axios.put(
-      `${process.env.REACT_APP_FIREBASE_URI}/expense/${expense.id}.json`,
+      `${REACT_APP_FIREBASE_URI}/expense/${expense.id}.json`,
       expense
     );
     console.log(response.data);

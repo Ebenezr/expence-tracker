@@ -6,7 +6,14 @@ import { useColorScheme } from 'react-native';
 import { router } from 'expo-router';
 import { formatDate } from '@/utils/date';
 
-const ExpenseCard = ({ id, title, date, amount }: ExpenseType) => {
+interface ExpenseCardProps {
+  id?: string;
+  title?: string;
+  date?: Date | string | any;
+  amount?: number;
+}
+
+const ExpenseCard = ({ id, title, date, amount }: ExpenseCardProps) => {
   const scheme = useColorScheme();
 
   const expencePressHandler = () => {
@@ -45,7 +52,7 @@ const ExpenseCard = ({ id, title, date, amount }: ExpenseType) => {
           <Text
             style={{ ...styles.date, color: Colors[scheme ?? 'dark'].gray }}
           >
-            {formatDate(date)}
+            {formatDate(date ?? new Date().toISOString())}
           </Text>
         </View>
         <View
